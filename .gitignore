@@ -1,0 +1,25 @@
+# Compilacion Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Base de datos local generada en tiempo de ejecucion
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Logs
+*.log
