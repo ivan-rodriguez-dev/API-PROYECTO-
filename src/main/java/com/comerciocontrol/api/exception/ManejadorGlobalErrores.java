@@ -6,12 +6,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -67,6 +71,41 @@ public class ManejadorGlobalErrores {
         return construir(HttpStatus.NOT_FOUND, "Recurso no encontrado", ex.getMessage(), req, null);
     }
 
+    /**
+     * 404 - la URL solicitada no corresponde a ningun endpoint de la API.
+     *
+     * <p>Es el caso tipico de escribir una ruta mal en el navegador. Se responde con una
+     * pista de las rutas utiles en lugar de un error generico.</p>
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<RespuestaError> rutaInexistente(NoResourceFoundException ex,
+                                                          HttpServletRequest req) {
+        return construir(HttpStatus.NOT_FOUND, "Ruta no encontrada",
+                "La ruta '" + req.getRequestURI() + "' no corresponde a ningun servicio de esta API. "
+                        + "Consulte la documentacion en /swagger-ui.html o el indice en /",
+                req, null);
+    }
+
+    /** 405 - el metodo HTTP no esta permitido en esa ruta (por ejemplo GET donde se espera POST). */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<RespuestaError> metodoNoPermitido(HttpRequestMethodNotSupportedException ex,
+                                                            HttpServletRequest req) {
+        return construir(HttpStatus.METHOD_NOT_ALLOWED, "Metodo no permitido",
+                "El metodo " + ex.getMethod() + " no esta soportado en esta ruta. Metodos validos: "
+                        + String.join(", ", ex.getSupportedMethods() == null
+                        ? new String[]{"ninguno"} : ex.getSupportedMethods()),
+                req, null);
+    }
+
+    /** 415 - falta la cabecera Content-Type: application/json o llega otro formato. */
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<RespuestaError> formatoNoSoportado(HttpMediaTypeNotSupportedException ex,
+                                                             HttpServletRequest req) {
+        return construir(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Formato no soportado",
+                "Esta API solo acepta JSON. Envie la cabecera 'Content-Type: application/json'",
+                req, null);
+    }
+
     /** 409 - una regla de negocio impide la operacion. */
     @ExceptionHandler(ReglaNegocioException.class)
     public ResponseEntity<RespuestaError> reglaNegocio(ReglaNegocioException ex,
@@ -92,9 +131,18 @@ public class ManejadorGlobalErrores {
         return construir(HttpStatus.CONFLICT, "Conflicto de integridad", mensaje, req, null);
     }
 
-    /** 500 - cualquier fallo no previsto. */
+    /**
+     * 500 - cualquier fallo no previsto.
+     *
+     * <p>Si la excepcion es una de las que Spring ya clasifica con un codigo HTTP propio
+     * ({@link ErrorResponse}) se respeta ese codigo en vez de degradarla a 500.</p>
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<RespuestaError> errorInterno(Exception ex, HttpServletRequest req) {
+        if (ex instanceof ErrorResponse respuestaSpring) {
+            HttpStatus estado = HttpStatus.valueOf(respuestaSpring.getStatusCode().value());
+            return construir(estado, estado.getReasonPhrase(), mensajeLegible(ex), req, null);
+        }
         return construir(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno",
                 "Ocurrio un error inesperado procesando la peticion: " + mensajeLegible(ex),
                 req, null);
