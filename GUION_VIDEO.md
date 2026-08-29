@@ -121,7 +121,7 @@ por una, mostrando el cuerpo de la respuesta y la pestaña **Test Results** en v
 > ejecuta SQL, siempre con consultas parametrizadas. Es la misma separación del proyecto de
 > escritorio, trasladada al mundo web.
 >
-> El historial tiene **dieciséis commits** con mensajes descriptivos, uno por cada módulo construido:
+> El historial tiene **un commit por cada módulo construido**, con mensajes descriptivos:
 > el proyecto Maven, el esquema de base de datos, la seguridad, el POS, los endpoints, las pruebas.
 >
 > Y el **README** documenta todo: la justificación de la API, la tabla de trazabilidad con los
