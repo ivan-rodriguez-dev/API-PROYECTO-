@@ -212,44 +212,45 @@ pega el token y ya se pueden ejecutar el resto de operaciones.
 
 | # | Método | Ruta | Descripción | Roles |
 |---|---|---|---|---|
-| 1 | `GET` | `/api/health` | Estado de la API y de la base de datos | público |
-| 2 | `POST` | `/api/auth/login` | Iniciar sesión y obtener el token JWT | público |
-| 3 | `GET` | `/api/auth/perfil` | Datos del usuario autenticado | todos |
-| 4 | `GET` | `/api/productos` | Listar productos (filtros `q`, `categoria`) | todos |
-| 5 | `GET` | `/api/productos/{id}` | Consultar un producto | todos |
-| 6 | `GET` | `/api/productos/stock-critico` | Productos que requieren reposición | todos |
-| 7 | `GET` | `/api/productos/categorias` | Categorías existentes | todos |
-| 8 | `POST` | `/api/productos` | Crear un producto | admin, bodeguero |
-| 9 | `PUT` | `/api/productos/{id}` | Actualizar un producto | admin, bodeguero |
-| 10 | `DELETE` | `/api/productos/{id}` | Dar de baja un producto | admin |
-| 11 | `GET` | `/api/clientes` | Listar clientes (filtro `q`) | admin, vendedor |
-| 12 | `GET` | `/api/clientes/{id}` | Consultar un cliente | admin, vendedor |
-| 13 | `POST` | `/api/clientes` | Registrar un cliente | admin, vendedor |
-| 14 | `PUT` | `/api/clientes/{id}` | Actualizar un cliente | admin, vendedor |
-| 15 | `DELETE` | `/api/clientes/{id}` | Dar de baja un cliente | admin |
-| 16 | `GET` | `/api/proveedores` | Listar proveedores | admin, bodeguero |
-| 17 | `GET` | `/api/proveedores/{id}` | Consultar un proveedor | admin, bodeguero |
-| 18 | `POST` | `/api/proveedores` | Registrar un proveedor | admin, bodeguero |
-| 19 | `PUT` | `/api/proveedores/{id}` | Actualizar un proveedor | admin, bodeguero |
-| 20 | `DELETE` | `/api/proveedores/{id}` | Dar de baja un proveedor | admin |
-| 21 | `GET` | `/api/ventas` | Listar ventas (`desde`, `hasta`) | admin, vendedor |
-| 22 | `GET` | `/api/ventas/{id}` | Consultar una venta con su detalle | admin, vendedor |
-| 23 | `POST` | `/api/ventas` | **Registrar una venta (transacción POS)** | admin, vendedor |
-| 24 | `GET` | `/api/movimientos` | Kardex (`productoId`, `tipo`) | admin, bodeguero |
-| 25 | `GET` | `/api/movimientos/{id}` | Consultar un movimiento | admin, bodeguero |
-| 26 | `POST` | `/api/movimientos` | Registrar entrada, salida o ajuste | admin, bodeguero |
-| 27 | `GET` | `/api/caja/estado` | ¿Hay caja abierta? | admin, vendedor |
-| 28 | `GET` | `/api/caja` | Historial de jornadas de caja | admin, vendedor |
-| 29 | `POST` | `/api/caja/apertura` | Abrir la caja | admin, vendedor |
-| 30 | `POST` | `/api/caja/cierre` | Cerrar la caja y calcular el cuadre | admin, vendedor |
-| 31 | `GET` | `/api/reportes/ventas` | Resumen de ventas del período | todos |
-| 32 | `GET` | `/api/reportes/mas-vendidos` | Ranking de productos más vendidos | todos |
-| 33 | `GET` | `/api/reportes/inventario` | Valorización del inventario | todos |
-| 34 | `GET` | `/api/reportes/stock-critico` | Productos por reponer | todos |
-| 35 | `GET` | `/api/usuarios` | Listar usuarios | admin |
-| 36 | `POST` | `/api/usuarios` | Crear un usuario | admin |
-| 37 | `PUT` | `/api/usuarios/{id}/estado` | Activar o desactivar un usuario | admin |
-| 38 | `GET` | `/api/auditoria` | Traza de auditoría | admin |
+| 1 | `GET` | `/` | Índice de la API con enlaces a la documentación | público |
+| 2 | `GET` | `/api/health` | Estado de la API y de la base de datos | público |
+| 3 | `POST` | `/api/auth/login` | Iniciar sesión y obtener el token JWT | público |
+| 4 | `GET` | `/api/auth/perfil` | Datos del usuario autenticado | todos |
+| 5 | `GET` | `/api/productos` | Listar productos (filtros `q`, `categoria`) | todos |
+| 6 | `GET` | `/api/productos/{id}` | Consultar un producto | todos |
+| 7 | `GET` | `/api/productos/stock-critico` | Productos que requieren reposición | todos |
+| 8 | `GET` | `/api/productos/categorias` | Categorías existentes | todos |
+| 9 | `POST` | `/api/productos` | Crear un producto | admin, bodeguero |
+| 10 | `PUT` | `/api/productos/{id}` | Actualizar un producto | admin, bodeguero |
+| 11 | `DELETE` | `/api/productos/{id}` | Dar de baja un producto | admin |
+| 12 | `GET` | `/api/clientes` | Listar clientes (filtro `q`) | admin, vendedor |
+| 13 | `GET` | `/api/clientes/{id}` | Consultar un cliente | admin, vendedor |
+| 14 | `POST` | `/api/clientes` | Registrar un cliente | admin, vendedor |
+| 15 | `PUT` | `/api/clientes/{id}` | Actualizar un cliente | admin, vendedor |
+| 16 | `DELETE` | `/api/clientes/{id}` | Dar de baja un cliente | admin |
+| 17 | `GET` | `/api/proveedores` | Listar proveedores | admin, bodeguero |
+| 18 | `GET` | `/api/proveedores/{id}` | Consultar un proveedor | admin, bodeguero |
+| 19 | `POST` | `/api/proveedores` | Registrar un proveedor | admin, bodeguero |
+| 20 | `PUT` | `/api/proveedores/{id}` | Actualizar un proveedor | admin, bodeguero |
+| 21 | `DELETE` | `/api/proveedores/{id}` | Dar de baja un proveedor | admin |
+| 22 | `GET` | `/api/ventas` | Listar ventas (`desde`, `hasta`) | admin, vendedor |
+| 23 | `GET` | `/api/ventas/{id}` | Consultar una venta con su detalle | admin, vendedor |
+| 24 | `POST` | `/api/ventas` | **Registrar una venta (transacción POS)** | admin, vendedor |
+| 25 | `GET` | `/api/movimientos` | Kardex (`productoId`, `tipo`) | admin, bodeguero |
+| 26 | `GET` | `/api/movimientos/{id}` | Consultar un movimiento | admin, bodeguero |
+| 27 | `POST` | `/api/movimientos` | Registrar entrada, salida o ajuste | admin, bodeguero |
+| 28 | `GET` | `/api/caja/estado` | ¿Hay caja abierta? | admin, vendedor |
+| 29 | `GET` | `/api/caja` | Historial de jornadas de caja | admin, vendedor |
+| 30 | `POST` | `/api/caja/apertura` | Abrir la caja | admin, vendedor |
+| 31 | `POST` | `/api/caja/cierre` | Cerrar la caja y calcular el cuadre | admin, vendedor |
+| 32 | `GET` | `/api/reportes/ventas` | Resumen de ventas del período | todos |
+| 33 | `GET` | `/api/reportes/mas-vendidos` | Ranking de productos más vendidos | todos |
+| 34 | `GET` | `/api/reportes/inventario` | Valorización del inventario | todos |
+| 35 | `GET` | `/api/reportes/stock-critico` | Productos por reponer | todos |
+| 36 | `GET` | `/api/usuarios` | Listar usuarios | admin |
+| 37 | `POST` | `/api/usuarios` | Crear un usuario | admin |
+| 38 | `PUT` | `/api/usuarios/{id}/estado` | Activar o desactivar un usuario | admin |
+| 39 | `GET` | `/api/auditoria` | Traza de auditoría | admin |
 
 ## 11. Pruebas funcionales con Postman
 

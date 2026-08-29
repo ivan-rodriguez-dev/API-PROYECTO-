@@ -17,6 +17,7 @@ mvn spring-boot:run
 3. Abrir **Postman** e importar los dos archivos de la carpeta `postman/`.
 4. Seleccionar el entorno **ComercioControl - Local** (arriba a la derecha).
 5. Abrir estas pestañas en el navegador, en este orden:
+   - `http://localhost:8080` (índice de la API)
    - `http://localhost:8080/swagger-ui.html`
    - El repositorio en GitHub (o la carpeta local si aún no lo has subido)
 6. Tener el `README.md` abierto en el editor.
@@ -54,7 +55,7 @@ mvn spring-boot:run
 > inventario es el CRUD de `/api/productos`; el registro de ventas del POS es `POST /api/ventas`;
 > y así con clientes, proveedores, movimientos de stock, caja, reportes y auditoría.
 >
-> Son **38 endpoints** organizados en nueve módulos. Toda la documentación se genera sola con
+> Son **39 endpoints** organizados en nueve módulos. Toda la documentación se genera sola con
 > OpenAPI: aquí en **Swagger** se ve cada operación, sus parámetros, los códigos de respuesta y
 > se puede probar desde el navegador.»
 
@@ -120,13 +121,13 @@ por una, mostrando el cuerpo de la respuesta y la pestaña **Test Results** en v
 > ejecuta SQL, siempre con consultas parametrizadas. Es la misma separación del proyecto de
 > escritorio, trasladada al mundo web.
 >
-> El historial tiene **catorce commits** con mensajes descriptivos, uno por cada módulo construido:
+> El historial tiene **dieciséis commits** con mensajes descriptivos, uno por cada módulo construido:
 > el proyecto Maven, el esquema de base de datos, la seguridad, el POS, los endpoints, las pruebas.
 >
 > Y el **README** documenta todo: la justificación de la API, la tabla de trazabilidad con los
 > requerimientos, el stack tecnológico, las diez reglas de negocio implementadas, la matriz de
 > permisos por rol, la tabla de códigos de error, cómo ejecutar el proyecto y el catálogo completo
-> de los 38 endpoints.»
+> de los 39 endpoints.»
 
 *(En pantalla: GitHub o `git log --oneline` en la terminal → recorrer el README rápidamente.)*
 
