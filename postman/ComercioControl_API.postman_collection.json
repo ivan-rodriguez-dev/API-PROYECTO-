@@ -7,7 +7,13 @@
   },
   "auth": {
     "type": "bearer",
-    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
   },
   "event": [
     {
@@ -24,7 +30,11 @@
     }
   ],
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
   ],
   "item": [
     {
@@ -33,10 +43,21 @@
         {
           "name": "Health check",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/health", "host": ["{{baseUrl}}"], "path": ["api", "health"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            },
             "description": "Comprueba que la API responde y que la conexion con SQLite esta activa. Es un recurso publico: no necesita token."
           },
           "response": [],
@@ -66,14 +87,31 @@
         {
           "name": "Login administrador (guarda el token)",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"usuario\": \"ivan.admin\",\n  \"password\": \"Admin2026*\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
             "description": "Valida las credenciales contra la tabla usuarios y devuelve el token JWT. El script de pruebas lo guarda en la variable de entorno 'token'."
           },
           "response": [],
@@ -105,14 +143,31 @@
         {
           "name": "Login vendedor (guarda el token de vendedor)",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"usuario\": \"laura.ventas\",\n  \"password\": \"Venta2026*\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
             "description": "Token del rol vendedor. Se usa mas adelante para el flujo del punto de venta y para comprobar el control de acceso por rol."
           },
           "response": [],
@@ -136,14 +191,31 @@
         {
           "name": "ERROR 401 - Contrasena incorrecta",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"usuario\": \"ivan.admin\",\n  \"password\": \"claveEquivocada\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
             "description": "Prueba negativa: credenciales invalidas. El mensaje es generico a proposito, para no revelar si fallo el usuario o la contrasena."
           },
           "response": [],
@@ -165,11 +237,31 @@
         {
           "name": "ERROR 400 - Login sin campos obligatorios",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"usuario\": \"\",\n  \"password\": \"\"\n}" },
-            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"\",\n  \"password\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
             "description": "Prueba de las validaciones de entrada: la API responde 400 y detalla que campo fallo."
           },
           "response": [],
@@ -191,10 +283,21 @@
         {
           "name": "ERROR 401 - Peticion sin token",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
             "description": "Cualquier recurso distinto de /api/health y /api/auth/login exige token."
           },
           "response": [],
@@ -218,7 +321,17 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/auth/perfil", "host": ["{{baseUrl}}"], "path": ["api", "auth", "perfil"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/perfil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "perfil"
+              ]
+            },
             "description": "Confirma que el token guardado es valido y devuelve los datos del usuario."
           },
           "response": [],
@@ -240,6 +353,191 @@
       ]
     },
     {
+      "name": "01b - Registro de usuarios",
+      "description": "Alta de un usuario del sistema e inicio de sesion con esas credenciales. El registro esta reservado al administrador: en un punto de venta los usuarios los crea el duenio del negocio, no se auto-registran.",
+      "item": [
+        {
+          "name": "Registrar un usuario nuevo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana Lucia Torres\",\n  \"usuario\": \"{{usuarioNuevo}}\",\n  \"password\": \"Ana2026*\",\n  \"rol\": \"vendedor\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            },
+            "description": "Registra un usuario. La contrasena se almacena con hash SHA-256; la respuesta nunca la devuelve. El nombre de usuario se genera al azar para poder repetir la ejecucion."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('usuarioNuevo', 'ana.torres' + Math.floor(100 + Math.random() * 899));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Codigo 201 Created', () => pm.response.to.have.status(201));",
+                  "const usuario = pm.response.json();",
+                  "pm.test('Devuelve el id asignado', () => pm.expect(usuario.id).to.be.a('number'));",
+                  "pm.test('El rol queda registrado', () => pm.expect(usuario.rol).to.eql('vendedor'));",
+                  "pm.test('La respuesta NO expone la contrasena', () => pm.expect(usuario).to.not.have.property('password'));",
+                  "pm.environment.set('usuarioCreadoId', usuario.id);"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Iniciar sesion con el usuario registrado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"{{usuarioNuevo}}\",\n  \"password\": \"Ana2026*\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Comprueba que el usuario recien creado puede autenticarse y recibe su propio token JWT."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Codigo 200 OK', () => pm.response.to.have.status(200));",
+                  "const cuerpo = pm.response.json();",
+                  "pm.test('Emite un token JWT', () => pm.expect(cuerpo.token).to.be.a('string').and.to.include('.'));",
+                  "pm.test('El token corresponde al usuario creado', () => pm.expect(cuerpo.usuario.usuario).to.eql(pm.environment.get('usuarioNuevo')));",
+                  "pm.test('Hereda el rol vendedor', () => pm.expect(cuerpo.usuario.rol).to.eql('vendedor'));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "ERROR 400 - Registro con datos invalidos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"\",\n  \"usuario\": \"\",\n  \"password\": \"123\",\n  \"rol\": \"gerente\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            },
+            "description": "Validacion de entrada: nombre y usuario vacios, contrasena demasiado corta y un rol que no existe. La API responde 400 con el detalle por campo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Codigo 400 Bad Request', () => pm.response.to.have.status(400));",
+                  "const error = pm.response.json();",
+                  "pm.test('Detalla los campos invalidos', () => pm.expect(error.detalles).to.be.an('object'));",
+                  "pm.test('Senala el rol no permitido', () => pm.expect(error.detalles.rol).to.include('administrador'));",
+                  "pm.test('Senala la contrasena corta', () => pm.expect(error.detalles.password).to.include('8'));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "ERROR 409 - Nombre de usuario repetido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Otro usuario\",\n  \"usuario\": \"{{usuarioNuevo}}\",\n  \"password\": \"Otro2026*\",\n  \"rol\": \"bodeguero\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            },
+            "description": "El nombre de usuario es unico: registrar el mismo dos veces devuelve 409 Conflict."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Codigo 409 Conflict', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "02 - Inventario",
       "item": [
         {
@@ -247,7 +545,16 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
             "description": "Catalogo completo. Cada producto trae los campos calculados 'estado' (OK / CRITICO) y 'utilidadUnitaria'."
           },
           "response": [],
@@ -276,11 +583,24 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/productos?q=a&categoria=Granos",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "productos"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ],
               "query": [
-                { "key": "q", "value": "a", "description": "Texto en el codigo o el nombre" },
-                { "key": "categoria", "value": "Granos", "description": "Categoria exacta" }
+                {
+                  "key": "q",
+                  "value": "a",
+                  "description": "Texto en el codigo o el nombre"
+                },
+                {
+                  "key": "categoria",
+                  "value": "Granos",
+                  "description": "Categoria exacta"
+                }
               ]
             },
             "description": "Filtros combinados sobre el catalogo."
@@ -308,8 +628,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/productos/stock-critico",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "productos", "stock-critico"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "stock-critico"
+              ]
             },
             "description": "Alerta de reposicion: productos cuyo stock actual esta en el minimo o por debajo."
           },
@@ -337,7 +663,17 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/productos/1", "host": ["{{baseUrl}}"], "path": ["api", "productos", "1"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "1"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -358,7 +694,17 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/productos/9999", "host": ["{{baseUrl}}"], "path": ["api", "productos", "9999"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "9999"
+              ]
+            },
             "description": "Prueba negativa: la API responde 404 con el formato de error unico, no con una traza de Java."
           },
           "response": [],
@@ -383,12 +729,26 @@
           "name": "Crear producto",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"codigo\": \"{{codigoNuevo}}\",\n  \"nombre\": \"Panela x 500 g\",\n  \"categoria\": \"Abarrotes\",\n  \"precioCosto\": 2100,\n  \"precioVenta\": 3200,\n  \"stockActual\": 40,\n  \"stockMinimo\": 10,\n  \"proveedorId\": 2\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
             "description": "Alta de producto. El codigo se genera al azar en el script previo para que la coleccion se pueda ejecutar varias veces."
           },
           "response": [],
@@ -421,18 +781,63 @@
           ]
         },
         {
+          "name": "Consultar el producto creado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/{{productoCreadoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "{{productoCreadoId}}"
+              ]
+            },
+            "description": "Lectura (R del CRUD) del producto que se acaba de crear."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Codigo 200 OK', () => pm.response.to.have.status(200));",
+                  "const producto = pm.response.json();",
+                  "pm.test('Es el producto creado', () => pm.expect(producto.id).to.eql(Number(pm.environment.get('productoCreadoId'))));",
+                  "pm.test('Calcula la utilidad unitaria', () => pm.expect(producto.utilidadUnitaria).to.be.a('number'));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
           "name": "Actualizar producto",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"codigo\": \"{{codigoNuevo}}\",\n  \"nombre\": \"Panela x 500 g (presentacion nueva)\",\n  \"categoria\": \"Abarrotes\",\n  \"precioCosto\": 2100,\n  \"precioVenta\": 3500,\n  \"stockActual\": 40,\n  \"stockMinimo\": 10,\n  \"proveedorId\": 2\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/productos/{{productoCreadoId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "productos", "{{productoCreadoId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "{{productoCreadoId}}"
+              ]
             }
           },
           "response": [],
@@ -450,15 +855,94 @@
           ]
         },
         {
+          "name": "Dar de baja el producto (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/{{productoCreadoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "{{productoCreadoId}}"
+              ]
+            },
+            "description": "Baja logica del producto (D del CRUD). Responde 204 sin cuerpo y el producto deja de aparecer en el catalogo, pero se conserva en la base de datos para no romper la trazabilidad de las ventas historicas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Codigo 204 No Content', () => pm.response.to.have.status(204));",
+                  "pm.test('La respuesta no trae cuerpo', () => pm.expect(pm.response.text()).to.be.empty);"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Verificar que el producto quedo inactivo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/{{productoCreadoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "{{productoCreadoId}}"
+              ]
+            },
+            "description": "Tras la baja el producto sigue existiendo pero con activo=false: es una baja logica, para no romper la trazabilidad de las ventas historicas que lo referencian."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Codigo 200 OK', () => pm.response.to.have.status(200));",
+                  "const producto = pm.response.json();",
+                  "pm.test('Quedo marcado como inactivo', () => pm.expect(producto.activo).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
           "name": "ERROR 400 - Producto con datos invalidos",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"codigo\": \"\",\n  \"nombre\": \"\",\n  \"precioCosto\": -500,\n  \"precioVenta\": 1000,\n  \"stockActual\": -3,\n  \"stockMinimo\": 5\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
             "description": "Validaciones de entrada: campos obligatorios vacios y numeros negativos."
           },
           "response": [],
@@ -485,12 +969,26 @@
           "name": "ERROR 409 - Precio de venta menor al costo",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"codigo\": \"P-VENDIDO-PERDIDA\",\n  \"nombre\": \"Producto vendido a perdida\",\n  \"categoria\": \"Pruebas\",\n  \"precioCosto\": 5000,\n  \"precioVenta\": 3000,\n  \"stockActual\": 10,\n  \"stockMinimo\": 2\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
             "description": "Regla de negocio: el precio de venta no puede ser menor que el precio de costo."
           },
           "response": [],
@@ -514,15 +1012,35 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"codigo\": \"P-SIN-PERMISO\",\n  \"nombre\": \"Intento sin permiso\",\n  \"precioCosto\": 100,\n  \"precioVenta\": 200,\n  \"stockActual\": 1,\n  \"stockMinimo\": 1\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/productos", "host": ["{{baseUrl}}"], "path": ["api", "productos"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos"
+              ]
+            },
             "description": "Control de acceso por rol: el inventario es responsabilidad del administrador y del bodeguero."
           },
           "response": [],
@@ -551,7 +1069,16 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/clientes", "host": ["{{baseUrl}}"], "path": ["api", "clientes"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -571,12 +1098,26 @@
           "name": "Registrar cliente",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Sofia Ramirez Leon\",\n  \"cedula\": \"{{cedulaNueva}}\",\n  \"telefono\": \"3009998877\",\n  \"email\": \"sofia.ramirez@mail.com\",\n  \"direccion\": \"Cll 12 # 7-30\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/clientes", "host": ["{{baseUrl}}"], "path": ["api", "clientes"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -610,12 +1151,26 @@
           "name": "ERROR 400 - Correo con formato invalido",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Cliente de prueba\",\n  \"cedula\": \"abc\",\n  \"email\": \"esto-no-es-un-correo\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/clientes", "host": ["{{baseUrl}}"], "path": ["api", "clientes"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -645,7 +1200,16 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/proveedores", "host": ["{{baseUrl}}"], "path": ["api", "proveedores"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/proveedores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "proveedores"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -665,12 +1229,26 @@
           "name": "Registrar proveedor",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nit\": \"{{nitNuevo}}\",\n  \"razonSocial\": \"Comercializadora del Sur S.A.S.\",\n  \"contacto\": \"Andres Lopez\",\n  \"telefono\": \"3181112233\",\n  \"email\": \"compras@comersur.com\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/proveedores", "host": ["{{baseUrl}}"], "path": ["api", "proveedores"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/proveedores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "proveedores"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -708,11 +1286,27 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/caja/estado", "host": ["{{baseUrl}}"], "path": ["api", "caja", "estado"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/caja/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "caja",
+                "estado"
+              ]
+            },
             "description": "El punto de venta consulta esto antes de habilitar el registro de ventas."
           },
           "response": [],
@@ -736,15 +1330,35 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"clienteId\": 2,\n  \"descuento\": 0,\n  \"items\": [\n    { \"productoId\": 1, \"cantidad\": 2 }\n  ]\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/ventas", "host": ["{{baseUrl}}"], "path": ["api", "ventas"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            },
             "description": "Regla de negocio numero uno del proyecto: no se vende sin caja abierta."
           },
           "response": [],
@@ -768,15 +1382,36 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"apertura\": 100000,\n  \"observacion\": \"Apertura del turno de la manana\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/caja/apertura", "host": ["{{baseUrl}}"], "path": ["api", "caja", "apertura"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/caja/apertura",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "caja",
+                "apertura"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -802,12 +1437,36 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"apertura\": 50000\n}" },
-            "url": { "raw": "{{baseUrl}}/api/caja/apertura", "host": ["{{baseUrl}}"], "path": ["api", "caja", "apertura"] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"apertura\": 50000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/caja/apertura",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "caja",
+                "apertura"
+              ]
+            },
             "description": "Solo puede haber una caja abierta a la vez."
           },
           "response": [],
@@ -831,7 +1490,17 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/productos/1", "host": ["{{baseUrl}}"], "path": ["api", "productos", "1"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "1"
+              ]
+            },
             "description": "Se guarda el stock actual para comprobar despues que la venta lo descuenta."
           },
           "response": [],
@@ -854,15 +1523,35 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"clienteId\": 2,\n  \"descuento\": 300,\n  \"items\": [\n    { \"productoId\": 1, \"cantidad\": 3 },\n    { \"productoId\": 3, \"cantidad\": 2 }\n  ]\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/ventas", "host": ["{{baseUrl}}"], "path": ["api", "ventas"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            },
             "description": "Transaccion atomica: cabecera + detalle + descuento de stock + movimiento de salida + auditoria.\n\n3 x Arroz (2.500) + 2 x Leche (4.900) = 17.300 de subtotal.\nBase = 17.300 - 300 = 17.000. IVA 19% = 3.230. Total = 20.230.\n\nEl cliente solo envia productoId y cantidad: los importes los calcula el servidor con el precio guardado en la base de datos."
           },
           "response": [],
@@ -895,8 +1584,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/ventas/{{ventaId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "ventas", "{{ventaId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas",
+                "{{ventaId}}"
+              ]
             }
           },
           "response": [],
@@ -927,7 +1622,17 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/productos/1", "host": ["{{baseUrl}}"], "path": ["api", "productos", "1"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "productos",
+                "1"
+              ]
+            },
             "description": "Comprueba que la venta descontó exactamente las 3 unidades vendidas."
           },
           "response": [],
@@ -954,11 +1659,22 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/movimientos?productoId=1&tipo=salida",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "movimientos"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ],
               "query": [
-                { "key": "productoId", "value": "1" },
-                { "key": "tipo", "value": "salida" }
+                {
+                  "key": "productoId",
+                  "value": "1"
+                },
+                {
+                  "key": "tipo",
+                  "value": "salida"
+                }
               ]
             },
             "description": "La trazabilidad del inventario: cada venta genera su movimiento en el kardex."
@@ -987,15 +1703,35 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"descuento\": 0,\n  \"items\": [\n    { \"productoId\": 2, \"cantidad\": 9999 }\n  ]\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/ventas", "host": ["{{baseUrl}}"], "path": ["api", "ventas"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            },
             "description": "Regla de negocio: el stock nunca puede quedar negativo. La transaccion completa se revierte."
           },
           "response": [],
@@ -1021,12 +1757,35 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"descuento\": 0,\n  \"items\": []\n}" },
-            "url": { "raw": "{{baseUrl}}/api/ventas", "host": ["{{baseUrl}}"], "path": ["api", "ventas"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descuento\": 0,\n  \"items\": []\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -1049,15 +1808,36 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"efectivoContado\": 120000,\n  \"observacion\": \"Cierre del turno de la manana\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/caja/cierre", "host": ["{{baseUrl}}"], "path": ["api", "caja", "cierre"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/caja/cierre",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "caja",
+                "cierre"
+              ]
+            },
             "description": "Diferencia = efectivo contado - (apertura + ventas del dia).\nApertura 100.000 + ventas 20.230 = 120.230 esperados. Se cuentan 120.000, por lo que faltan 230."
           },
           "response": [],
@@ -1086,12 +1866,26 @@
           "name": "Registrar entrada de inventario",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"productoId\": 2,\n  \"tipo\": \"entrada\",\n  \"cantidad\": 20,\n  \"observacion\": \"Compra a Alimentos del Huila\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/movimientos", "host": ["{{baseUrl}}"], "path": ["api", "movimientos"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/movimientos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            },
             "description": "Entrada de mercancia: suma unidades y deja constancia en el kardex."
           },
           "response": [],
@@ -1118,12 +1912,26 @@
           "name": "ERROR 409 - Salida sin stock suficiente",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"productoId\": 7,\n  \"tipo\": \"salida\",\n  \"cantidad\": 9999,\n  \"observacion\": \"Salida imposible\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/movimientos", "host": ["{{baseUrl}}"], "path": ["api", "movimientos"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/movimientos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -1145,12 +1953,26 @@
           "name": "ERROR 400 - Tipo de movimiento no valido",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"productoId\": 1,\n  \"tipo\": \"devolucion\",\n  \"cantidad\": 5\n}"
             },
-            "url": { "raw": "{{baseUrl}}/api/movimientos", "host": ["{{baseUrl}}"], "path": ["api", "movimientos"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/movimientos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -1173,7 +1995,16 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/movimientos", "host": ["{{baseUrl}}"], "path": ["api", "movimientos"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/movimientos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -1199,7 +2030,17 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/reportes/ventas", "host": ["{{baseUrl}}"], "path": ["api", "reportes", "ventas"] },
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "ventas"
+              ]
+            },
             "description": "Sin parametros toma el dia de hoy. Admite ?desde=yyyy-MM-dd&hasta=yyyy-MM-dd."
           },
           "response": [],
@@ -1228,9 +2069,20 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/reportes/mas-vendidos?limite=5",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reportes", "mas-vendidos"],
-              "query": [{ "key": "limite", "value": "5" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "mas-vendidos"
+              ],
+              "query": [
+                {
+                  "key": "limite",
+                  "value": "5"
+                }
+              ]
             }
           },
           "response": [],
@@ -1254,8 +2106,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/reportes/inventario",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reportes", "inventario"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "inventario"
+              ]
             }
           },
           "response": [],
@@ -1282,11 +2140,23 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/reportes/ventas?desde=2026-12-31&hasta=2026-01-01",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "reportes", "ventas"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "ventas"
+              ],
               "query": [
-                { "key": "desde", "value": "2026-12-31" },
-                { "key": "hasta", "value": "2026-01-01" }
+                {
+                  "key": "desde",
+                  "value": "2026-12-31"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-01-01"
+                }
               ]
             }
           },
@@ -1316,7 +2186,16 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/usuarios", "host": ["{{baseUrl}}"], "path": ["api", "usuarios"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
           },
           "response": [],
           "event": [
@@ -1341,9 +2220,19 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/auditoria?limite=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auditoria"],
-              "query": [{ "key": "limite", "value": "20" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auditoria"
+              ],
+              "query": [
+                {
+                  "key": "limite",
+                  "value": "20"
+                }
+              ]
             },
             "description": "Traza de quien ejecuto cada operacion. Debe aparecer el registro de la venta hecha en el flujo anterior."
           },
@@ -1368,11 +2257,26 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{tokenVendedor}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenVendedor}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/auditoria", "host": ["{{baseUrl}}"], "path": ["api", "auditoria"] }
+            "url": {
+              "raw": "{{baseUrl}}/api/auditoria",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auditoria"
+              ]
+            }
           },
           "response": [],
           "event": [

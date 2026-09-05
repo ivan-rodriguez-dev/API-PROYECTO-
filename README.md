@@ -252,13 +252,86 @@ pega el token y ya se pueden ejecutar el resto de operaciones.
 | 38 | `PUT` | `/api/usuarios/{id}/estado` | Activar o desactivar un usuario | admin |
 | 39 | `GET` | `/api/auditoria` | Traza de auditoría | admin |
 
+
+### 10.1 Contrato detallado de los servicios base
+
+El catálogo anterior lista las 39 rutas. Esta sección documenta, para los servicios que conforman la
+base de cualquier aplicación —autenticación y un módulo CRUD completo—, los **parámetros de entrada**
+y las **respuestas esperadas**. El contrato completo de las 39 rutas, con sus esquemas, está publicado
+en Swagger UI (`/swagger-ui.html`) y en el documento OpenAPI (`/v3/api-docs`).
+
+#### Registro de usuario
+
+| | |
+|---|---|
+| **Método y ruta** | `POST /api/usuarios` |
+| **Autorización** | `Bearer <token>` · rol `administrador` |
+| **Cuerpo** | `nombre` (texto, obligatorio) · `usuario` (texto, 4–50 caracteres, único) · `password` (texto, mínimo 8 caracteres) · `rol` (`administrador` \| `vendedor` \| `bodeguero`) |
+
+| Respuesta | Cuándo | Cuerpo |
+|---|---|---|
+| `201 Created` | El usuario se registró | Usuario creado con su `id`. **Nunca devuelve la contraseña** |
+| `400 Bad Request` | Algún campo no pasa la validación | `detalles` con el motivo campo por campo |
+| `409 Conflict` | El nombre de usuario ya existe | `mensaje` explicando el conflicto |
+| `403 Forbidden` | Quien llama no es administrador | Error uniforme |
+
+#### Inicio de sesión
+
+| | |
+|---|---|
+| **Método y ruta** | `POST /api/auth/login` |
+| **Autorización** | Pública |
+| **Cuerpo** | `usuario` (texto, obligatorio) · `password` (texto, obligatorio) |
+
+| Respuesta | Cuándo | Cuerpo |
+|---|---|---|
+| `200 OK` | Credenciales válidas | `token` (JWT), `tipo` (`Bearer`), `expiraEnSegundos` y los datos del `usuario` |
+| `401 Unauthorized` | Usuario inexistente, inactivo o contraseña incorrecta | Error uniforme, sin revelar cuál de los dos falló |
+| `400 Bad Request` | Falta alguno de los dos campos | `detalles` por campo |
+
+La contraseña se guarda con hash **SHA-256**; el token se firma con HS512 y caduca a las 8 horas.
+
+#### CRUD de productos
+
+| Operación | Método y ruta | Entrada | Respuesta esperada |
+|---|---|---|---|
+| **Crear** | `POST /api/productos` | `codigo` (único, ≤30) · `nombre` · `categoria` · `precioCosto` ≥ 0 · `precioVenta` ≥ 0 · `stockActual` ≥ 0 · `stockMinimo` ≥ 0 · `proveedorId` (opcional) | `201` con el producto y su `id` en la cabecera `Location`. `409` si el código se repite o si el precio de venta es menor al costo |
+| **Consultar** | `GET /api/productos/{id}` | `id` en la ruta | `200` con el producto, su `estado` (`OK` \| `BAJO` \| `CRITICO`) y la `utilidadUnitaria` calculada. `404` si no existe |
+| **Listar** | `GET /api/productos` | `q` (texto libre) y `categoria`, ambos opcionales | `200` con el arreglo de productos activos que coinciden |
+| **Actualizar** | `PUT /api/productos/{id}` | Mismos campos que el alta | `200` con el producto ya actualizado. `404` si no existe |
+| **Eliminar** | `DELETE /api/productos/{id}` | `id` en la ruta | `204` sin cuerpo. Es una **baja lógica**: el producto queda con `activo: false` y sale del catálogo, pero se conserva para no romper la trazabilidad de las ventas que lo referencian |
+
+Todas las rutas de escritura exigen rol `administrador` o `bodeguero`; un `vendedor` recibe `403`.
+
+#### Formato uniforme de error
+
+Cualquier fallo, sea de validación o de negocio, responde con la misma estructura, de modo que un
+cliente puede tratarlos con un solo bloque de código:
+
+```json
+{
+  "fecha": "2026-09-04T19:10:13",
+  "estado": 400,
+  "error": "Datos invalidos",
+  "mensaje": "La peticion contiene campos que no cumplen las validaciones",
+  "ruta": "/api/usuarios",
+  "detalles": {
+    "usuario": "El usuario debe tener entre 4 y 50 caracteres",
+    "password": "La contrasena debe tener al menos 8 caracteres",
+    "rol": "El rol debe ser 'administrador', 'vendedor' o 'bodeguero'"
+  }
+}
+```
+
+El campo `detalles` solo aparece cuando el error es de validación de campos.
+
 ## 11. Pruebas funcionales con Postman
 
 En la carpeta [`postman/`](postman/) están la colección y el entorno listos para importar:
 
 | Archivo | Contenido |
 |---|---|
-| `ComercioControl_API.postman_collection.json` | 25 peticiones organizadas por módulo, con pruebas automáticas |
+| `ComercioControl_API.postman_collection.json` | 52 peticiones organizadas por módulo, con 177 aserciones automáticas |
 | `ComercioControl_API.postman_environment.json` | Variable `baseUrl` y almacenamiento del token |
 
 **Cómo usarla:**
