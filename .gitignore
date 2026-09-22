@@ -23,3 +23,8 @@ desktop.ini
 
 # Logs
 *.log
+
+# Variables de entorno locales (nunca versionar secretos)
+.env
+.env.*
+!.env.example

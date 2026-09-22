@@ -195,6 +195,26 @@ mvn clean package
 java -jar target/comerciocontrol-api.jar
 ```
 
+### Configuración segura de JWT
+
+La clave con la que se firman los JWT no se guarda en el repositorio. Antes de arrancar la API, defina `JWT_SECRET` con una clave nueva, larga y aleatoria (mínimo 32 caracteres). Puede tomar como referencia `.env.example`, pero no versionar el archivo `.env` real.
+
+En Windows PowerShell, para la sesión actual:
+
+```powershell
+$env:JWT_SECRET = "una_clave_nueva_larga_aleatoria_de_al_menos_32_caracteres"
+mvn spring-boot:run
+```
+
+En Linux o macOS:
+
+```bash
+export JWT_SECRET='una_clave_nueva_larga_aleatoria_de_al_menos_32_caracteres'
+mvn spring-boot:run
+```
+
+Para ejecutar las pruebas automatizadas no hace falta definir la variable: usan una clave aislada en `src/test/resources`, que no se emplea al ejecutar la aplicación.
+
 ## 9. Documentación interactiva
 
 Con la API en ejecución:
