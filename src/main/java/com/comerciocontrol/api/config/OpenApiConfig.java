@@ -8,6 +8,7 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,8 +21,21 @@ import java.util.List;
 @Configuration
 public class OpenApiConfig {
 
+    /** Solo se publican en desarrollo; en el perfil prod no existen estos usuarios. */
+    private static final String USUARIOS_PRUEBA = """
+            **Usuarios de prueba**
+            | Usuario | Contrasena | Rol |
+            |---|---|---|
+            | ivan.admin | Admin2026* | administrador |
+            | laura.ventas | Venta2026* | vendedor |
+            | carlos.bodega | Bodega2026* | bodeguero |
+
+            """;
+
     @Bean
-    public OpenAPI comercioControlOpenAPI() {
+    public OpenAPI comercioControlOpenAPI(
+            @Value("${app.documentacion.usuarios-prueba:true}") boolean mostrarUsuariosPrueba,
+            @Value("${app.documentacion.servidor:http://localhost:8080}") String urlServidor) {
         final String esquemaJwt = "bearerAuth";
 
         return new OpenAPI()
@@ -40,21 +54,14 @@ public class OpenApiConfig {
                                 `/api/health`, exigen un token JWT en la cabecera \
                                 `Authorization: Bearer <token>`.
 
-                                **Usuarios de prueba**
-                                | Usuario | Contrasena | Rol |
-                                |---|---|---|
-                                | ivan.admin | Admin2026* | administrador |
-                                | laura.ventas | Venta2026* | vendedor |
-                                | carlos.bodega | Bodega2026* | bodeguero |
-
-                                Evidencia GA7-220501096-AA5-EV04 - Ivan Manuel Rodriguez David - Ficha 3235886
-                                """)
+                                """ + (mostrarUsuariosPrueba ? USUARIOS_PRUEBA : "")
+                                + "Evidencia GA7-220501096-AA5-EV04 - Ivan Manuel Rodriguez David - Ficha 3235886\n")
                         .contact(new Contact()
                                 .name("Ivan Manuel Rodriguez David")
                                 .email("ivan13gamer@gmail.com")
                                 .url("https://github.com/JuanMa3132/Comercio-ControlV1"))
                         .license(new License().name("Software propietario - (c) 2026 Ivan Rodriguez")))
-                .servers(List.of(new Server().url("http://localhost:8080").description("Entorno local de desarrollo")))
+                .servers(List.of(new Server().url(urlServidor).description("Servidor de la API")))
                 .addSecurityItem(new SecurityRequirement().addList(esquemaJwt))
                 .components(new Components().addSecuritySchemes(esquemaJwt,
                         new SecurityScheme()

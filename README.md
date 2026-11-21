@@ -124,8 +124,8 @@ Es exactamente la misma separación de responsabilidades del proyecto de escrito
 ## 6. Seguridad y control de acceso
 
 La autenticación es por **JWT**. `POST /api/auth/login` devuelve un token que debe enviarse en las
-demás peticiones como `Authorization: Bearer <token>`. Las contraseñas se almacenan con **SHA-256**
-(se mantiene la verificación de hashes MD5 heredados por compatibilidad con bases de datos antiguas).
+demás peticiones como `Authorization: Bearer <token>`. Las contraseñas nuevas se almacenan con **BCrypt**
+(se mantiene la verificación de hashes SHA-256 y MD5 heredados por compatibilidad con datos de desarrollo y bases de datos antiguas).
 
 Se replica la matriz de permisos de la aplicación de escritorio:
 
@@ -309,7 +309,7 @@ en Swagger UI (`/swagger-ui.html`) y en el documento OpenAPI (`/v3/api-docs`).
 | `401 Unauthorized` | Usuario inexistente, inactivo o contraseña incorrecta | Error uniforme, sin revelar cuál de los dos falló |
 | `400 Bad Request` | Falta alguno de los dos campos | `detalles` por campo |
 
-La contraseña se guarda con hash **SHA-256**; el token se firma con HS512 y caduca a las 8 horas.
+La contraseña se guarda con hash **BCrypt**; el token se firma con HS512 y caduca a las 8 horas.
 
 #### CRUD de productos
 

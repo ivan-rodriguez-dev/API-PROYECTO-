@@ -1,5 +1,6 @@
 package com.comerciocontrol.api.security;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -9,26 +10,31 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Calculo y verificacion del hash de contrasenas.
  *
- * <p>La API almacena las contrasenas con <b>SHA-256</b>. Se mantiene la
- * verificacion contra <b>MD5</b> unicamente por compatibilidad con las bases de
- * datos creadas por versiones anteriores de la aplicacion de escritorio, tal como
- * se advirtio en el README del proyecto.</p>
+ * <p>La API almacena las contrasenas nuevas con <b>BCrypt</b>. Se mantiene la
+ * verificacion contra <b>SHA-256</b> y <b>MD5</b> unicamente por compatibilidad con
+ * los datos de desarrollo y con las bases de datos creadas por versiones anteriores
+ * de la aplicacion de escritorio, tal como se advirtio en el README del proyecto.</p>
  */
 @Component
 public class PasswordHasher {
 
-    /** Devuelve el hash SHA-256 en hexadecimal de la contrasena en claro. */
+    private final BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+
+    /** Devuelve el hash BCrypt de la contrasena en claro. */
     public String hash(String textoPlano) {
-        return digerir("SHA-256", textoPlano);
+        return bcrypt.encode(textoPlano);
     }
 
     /**
      * Compara una contrasena en claro contra el hash almacenado.
-     * Acepta hashes SHA-256 (64 caracteres) y MD5 heredados (32 caracteres).
+     * Acepta BCrypt y los hashes heredados SHA-256 (64 caracteres) y MD5 (32 caracteres).
      */
     public boolean coincide(String textoPlano, String hashAlmacenado) {
         if (textoPlano == null || hashAlmacenado == null) {
             return false;
+        }
+        if (hashAlmacenado.startsWith("$2")) {
+            return bcrypt.matches(textoPlano, hashAlmacenado);
         }
         String esperado = hashAlmacenado.length() == 32
                 ? digerir("MD5", textoPlano)

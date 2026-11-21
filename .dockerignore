@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+!.env.example
+target
+*.db
+*.db-journal
+*.log
+.idea
+.vscode
+36_GA8_Modulos_Integrados
+docs
+postman
+GUION_VIDEO.md
+README.md

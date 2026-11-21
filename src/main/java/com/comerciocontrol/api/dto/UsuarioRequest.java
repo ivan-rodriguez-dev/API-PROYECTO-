@@ -21,6 +21,7 @@ public record UsuarioRequest(
         @Schema(example = "Clave2026*")
         @NotBlank(message = "La contrasena es obligatoria")
         @Size(min = 8, message = "La contrasena debe tener al menos 8 caracteres")
+        @Size(max = 72, message = "La contrasena no puede superar 72 caracteres")
         String password,
 
         @Schema(example = "vendedor", allowableValues = {"administrador", "vendedor", "bodeguero"})

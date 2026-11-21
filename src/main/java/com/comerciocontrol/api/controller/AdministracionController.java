@@ -64,7 +64,7 @@ public class AdministracionController {
 
     @PostMapping("/usuarios")
     @Operation(summary = "Crear un usuario",
-            description = "La contrasena se almacena cifrada con SHA-256; nunca en texto plano.")
+            description = "La contrasena se almacena con hash BCrypt; nunca en texto plano.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Usuario creado"),
             @ApiResponse(responseCode = "409", description = "El nombre de cuenta ya existe",

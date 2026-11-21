@@ -1,0 +1,2 @@
+# Los scripts del contenedor deben conservar saltos de linea LF
+*.sh text eol=lf

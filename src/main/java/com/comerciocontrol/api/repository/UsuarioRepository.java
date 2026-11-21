@@ -58,6 +58,12 @@ public class UsuarioRepository {
         return n != null && n > 0;
     }
 
+    public boolean existeAdministrador() {
+        Integer n = jdbc.queryForObject(
+                "SELECT COUNT(*) FROM usuarios WHERE rol = 'administrador' AND activo = 1", Integer.class);
+        return n != null && n > 0;
+    }
+
     private int ultimoId() {
         Integer id = jdbc.queryForObject("SELECT last_insert_rowid()", Integer.class);
         return id == null ? 0 : id;
