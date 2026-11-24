@@ -41,7 +41,7 @@ import java.util.Map;
 @RequestMapping("/api/respaldos")
 @RolesPermitidos({"administrador"})
 @Tag(name = "10 - Respaldos",
-        description = "Copia de seguridad y verificacion de integridad. Solo para el rol administrador")
+        description = "Copia de seguridad, restauracion y verificacion de integridad. Solo para el rol administrador")
 public class RespaldoController {
 
     private static final DateTimeFormatter SELLO = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
