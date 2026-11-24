@@ -102,7 +102,8 @@ public class ManejadorGlobalErrores {
     public ResponseEntity<RespuestaError> formatoNoSoportado(HttpMediaTypeNotSupportedException ex,
                                                              HttpServletRequest req) {
         return construir(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Formato no soportado",
-                "Esta API solo acepta JSON. Envie la cabecera 'Content-Type: application/json'",
+                "Esta API recibe JSON: envie la cabecera 'Content-Type: application/json'. "
+                        + "Solo la restauracion de copias (/api/respaldos/restauracion) recibe multipart/form-data",
                 req, null);
     }
 

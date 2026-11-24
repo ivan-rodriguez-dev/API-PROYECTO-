@@ -10,15 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,7 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:sqlite:target/test-comerciocontrol.db"
+        "spring.datasource.url=jdbc:sqlite:target/test-comerciocontrol.db",
+        "app.respaldos.directorio=target/respaldos-prueba"
 })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ComercioControlApiTest {
@@ -446,6 +452,83 @@ class ComercioControlApiTest {
         mvc.perform(get("/api/auditoria?tabla=sistema").header("Authorization", "Bearer " + tokenAdmin))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].accion").value("DESCARGAR_RESPALDO"));
+    }
+
+    @Test
+    @Order(35)
+    void elVendedorNoPuedeRestaurarRespaldos() throws Exception {
+        mvc.perform(multipart("/api/respaldos/restauracion")
+                        .file(archivoCopia(descargarCopia()))
+                        .param("confirmacion", "RESTAURAR")
+                        .header("Authorization", "Bearer " + tokenVendedor))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Order(36)
+    void laRestauracionRechazaUnArchivoQueNoEsSqlite() throws Exception {
+        mvc.perform(multipart("/api/respaldos/restauracion")
+                        .file(archivoCopia("esto no es una base de datos".getBytes(StandardCharsets.UTF_8)))
+                        .param("confirmacion", "RESTAURAR")
+                        .header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Order(37)
+    void laRestauracionExigeEscribirLaConfirmacion() throws Exception {
+        mvc.perform(multipart("/api/respaldos/restauracion")
+                        .file(archivoCopia(descargarCopia()))
+                        .param("confirmacion", "si")
+                        .header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensaje").value(containsString("RESTAURAR")));
+    }
+
+    @Test
+    @Order(38)
+    void laRestauracionDevuelveLosDatosDeLaCopiaYGuardaElEstadoPrevio() throws Exception {
+        byte[] copia = descargarCopia();
+        // Producto creado despues de la copia: debe desaparecer al restaurarla.
+        mvc.perform(post("/api/productos")
+                        .header("Authorization", "Bearer " + tokenAdmin)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"codigo":"P-RESTAURA","nombre":"Creado despues de la copia",
+                                 "categoria":"Control","precioCosto":1000,"precioVenta":1500,
+                                 "stockActual":5,"stockMinimo":1}
+                                """))
+                .andExpect(status().isCreated());
+
+        mvc.perform(multipart("/api/respaldos/restauracion")
+                        .file(archivoCopia(copia))
+                        .param("confirmacion", "RESTAURAR")
+                        .header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.restaurada").value(true))
+                .andExpect(jsonPath("$.copiaPrevia").value(startsWith("antes_de_restaurar_")))
+                .andExpect(jsonPath("$.verificacion.integridad").value("ok"))
+                .andExpect(jsonPath("$.auditoria").value("registrada"));
+
+        String productos = mvc.perform(get("/api/productos").header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(!productos.contains("P-RESTAURA"),
+                "El producto creado despues de la copia no debe existir tras restaurarla");
+
+        mvc.perform(get("/api/auditoria?tabla=sistema").header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].accion").value("RESTAURAR_RESPALDO"));
+    }
+
+    private byte[] descargarCopia() throws Exception {
+        return mvc.perform(get("/api/respaldos/descarga").header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsByteArray();
+    }
+
+    private static MockMultipartFile archivoCopia(byte[] contenido) {
+        return new MockMultipartFile("archivo", "copia.db", MediaType.APPLICATION_OCTET_STREAM_VALUE, contenido);
     }
 
     private String leer(MvcResult resultado, String campo) throws Exception {

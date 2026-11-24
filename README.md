@@ -66,7 +66,7 @@ la futura app móvil o cualquier otro cliente. La arquitectura pasa de monolíti
 | RF-10 Reportes e indicadores | *Como administrador quiero ver los indicadores del negocio* | `GET /api/reportes/*` |
 | RF-11 Auditoría | *Como administrador quiero saber quién hizo cada operación* | `GET /api/auditoria` |
 | RF-12 Administración de usuarios | *Como administrador quiero crear y desactivar usuarios* | `GET/POST /api/usuarios`, `PUT /api/usuarios/{id}/estado` |
-| RNF Respaldo y recuperación | *Como administrador quiero sacar una copia de la base y comprobar su integridad* | `GET /api/respaldos/descarga`, `GET /api/respaldos/verificacion` |
+| RNF Respaldo y recuperación | *Como administrador quiero sacar una copia de la base, restaurarla y comprobar su integridad* | `GET /api/respaldos/descarga`, `POST /api/respaldos/restauracion`, `GET /api/respaldos/verificacion` |
 
 ## 3. Tecnologías
 
@@ -142,12 +142,19 @@ Se replica la matriz de permisos de la aplicación de escritorio:
 | Caja | ✅ | ✅ | ❌ |
 | Reportes | ✅ | ✅ | ✅ |
 | Usuarios y auditoría | ✅ | ❌ | ❌ |
-| Respaldos y verificación de integridad | ✅ | ❌ | ❌ |
+| Respaldos, restauración y verificación de integridad | ✅ | ❌ | ❌ |
 
 `GET /api/respaldos/descarga` genera una copia consistente de la base con `VACUUM INTO`, sin detener
 la API, y la entrega como archivo `.db`; cada descarga queda en la auditoría. `GET /api/respaldos/verificacion`
 ejecuta `PRAGMA integrity_check` y cuenta los registros de cada tabla, para comprobar el sistema después
 de un mantenimiento, una restauración o una migración.
+
+`POST /api/respaldos/restauracion` (multipart: `archivo` con el `.db` y `confirmacion=RESTAURAR`) devuelve
+los datos de una copia. Antes de tocar la base valida el archivo (cabecera SQLite, `PRAGMA integrity_check`
+y mismas columnas que esta versión del esquema) y guarda el estado actual en `app.respaldos.directorio`
+(`/data/respaldos` en producción, se conservan las 5 últimas). El reemplazo usa la API de respaldo en línea
+de SQLite (`restore from`), así que funciona sin acceso al disco del servidor; también sirve para cargar los
+datos en una plataforma nueva durante una migración. Cada restauración queda en la auditoría.
 
 **Usuarios de prueba** (solo en desarrollo; el perfil `prod` no los crea y su primer administrador sale de variables de entorno):
 
