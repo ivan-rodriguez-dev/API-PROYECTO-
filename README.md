@@ -66,6 +66,7 @@ la futura app móvil o cualquier otro cliente. La arquitectura pasa de monolíti
 | RF-10 Reportes e indicadores | *Como administrador quiero ver los indicadores del negocio* | `GET /api/reportes/*` |
 | RF-11 Auditoría | *Como administrador quiero saber quién hizo cada operación* | `GET /api/auditoria` |
 | RF-12 Administración de usuarios | *Como administrador quiero crear y desactivar usuarios* | `GET/POST /api/usuarios`, `PUT /api/usuarios/{id}/estado` |
+| RNF Respaldo y recuperación | *Como administrador quiero sacar una copia de la base y comprobar su integridad* | `GET /api/respaldos/descarga`, `GET /api/respaldos/verificacion` |
 
 ## 3. Tecnologías
 
@@ -141,8 +142,14 @@ Se replica la matriz de permisos de la aplicación de escritorio:
 | Caja | ✅ | ✅ | ❌ |
 | Reportes | ✅ | ✅ | ✅ |
 | Usuarios y auditoría | ✅ | ❌ | ❌ |
+| Respaldos y verificación de integridad | ✅ | ❌ | ❌ |
 
-**Usuarios de prueba** (se crean solos la primera vez que arranca la API):
+`GET /api/respaldos/descarga` genera una copia consistente de la base con `VACUUM INTO`, sin detener
+la API, y la entrega como archivo `.db`; cada descarga queda en la auditoría. `GET /api/respaldos/verificacion`
+ejecuta `PRAGMA integrity_check` y cuenta los registros de cada tabla, para comprobar el sistema después
+de un mantenimiento, una restauración o una migración.
+
+**Usuarios de prueba** (solo en desarrollo; el perfil `prod` no los crea y su primer administrador sale de variables de entorno):
 
 | Usuario | Contraseña | Rol |
 |---|---|---|

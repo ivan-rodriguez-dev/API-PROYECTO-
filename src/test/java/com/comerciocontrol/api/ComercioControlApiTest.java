@@ -407,6 +407,47 @@ class ComercioControlApiTest {
         assertEquals(1, registros.size(), "Debe haber una sola venta auditada");
     }
 
+    // ------------------------------------------------------------- respaldos
+
+    @Test
+    @Order(31)
+    void elAdministradorDescargaUnaCopiaSqliteValida() throws Exception {
+        MvcResult resultado = mvc.perform(get("/api/respaldos/descarga")
+                        .header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        byte[] copia = resultado.getResponse().getContentAsByteArray();
+        String cabecera = new String(copia, 0, 15, java.nio.charset.StandardCharsets.US_ASCII);
+        assertEquals("SQLite format 3", cabecera, "El archivo debe ser una base SQLite");
+        assertTrue(resultado.getResponse().getHeader("Content-Disposition").contains(".db"),
+                "La respuesta debe descargarse como archivo .db");
+    }
+
+    @Test
+    @Order(32)
+    void elVendedorNoPuedeDescargarRespaldos() throws Exception {
+        mvc.perform(get("/api/respaldos/descarga").header("Authorization", "Bearer " + tokenVendedor))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Order(33)
+    void laVerificacionReportaIntegridadYConteos() throws Exception {
+        mvc.perform(get("/api/respaldos/verificacion").header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.integridad").value("ok"))
+                .andExpect(jsonPath("$.tablas.ventas").value(1));
+    }
+
+    @Test
+    @Order(34)
+    void laDescargaDelRespaldoQuedaAuditada() throws Exception {
+        mvc.perform(get("/api/auditoria?tabla=sistema").header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].accion").value("DESCARGAR_RESPALDO"));
+    }
+
     private String leer(MvcResult resultado, String campo) throws Exception {
         return JSON.readTree(resultado.getResponse().getContentAsString()).get(campo).asText();
     }
